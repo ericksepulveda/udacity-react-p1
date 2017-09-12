@@ -26,6 +26,7 @@ class ListBooks extends Component {
           <div>
             { shelves.map(shelve => (
               <Shelve
+                key={shelve.value}
                 books={books}
                 shelve={shelve}
               />
@@ -65,20 +66,9 @@ function hasValue(value) {
 
 export function toBookListItem(book) {
   return (
-    <li key={book.title}>
-      {toBook(book)}
+    <li key={book.id || book.title}>
+      <Book book={book}/>
     </li>
-  )
-}
-
-function toBook(book) {
-  return (
-    <Book
-      title={book.title}
-      author={book.author}
-      imageURL={book.imageURL}
-      status={book.status}
-    />
   )
 }
 

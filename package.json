@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "debounce": "^1.0.2",
     "prop-types": "^15.5.8",
     "ramda": "^0.24.1",
     "react": "^15.5.4",
