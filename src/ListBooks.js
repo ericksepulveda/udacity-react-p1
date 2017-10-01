@@ -11,7 +11,8 @@ const shelves = [
 
 class ListBooks extends Component {
   static propTypes = {
-    books: PropTypes.array
+    books: PropTypes.array,
+    update: PropTypes.func
   };
 
   render() {

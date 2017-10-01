@@ -2,9 +2,14 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { toBookListItem } from './ListBooks';
 import * as BooksAPI from './BooksAPI';
+import PropTypes from 'prop-types';
 import debounce from 'debounce';
 
 class Search extends Component {
+  static propTypes = {
+    update: PropTypes.func
+  };
+
   state = {
     query: '',
     books: []

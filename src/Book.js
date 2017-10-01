@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import * as BooksAPI from './BooksAPI';
+import PropTypes from 'prop-types';
 import { assoc } from 'ramda'
 
 class Book extends Component {
+  static propTypes = {
+    book: PropTypes.object,
+    update: PropTypes.func
+  };
+
   constructor(props) {
     super(props);
     this.state = {
