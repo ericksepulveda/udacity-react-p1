@@ -1,32 +1,47 @@
-import React, { Component } from 'react'
-import * as BooksAPI from './BooksAPI'
+import React, { Component } from 'react';
+import * as BooksAPI from './BooksAPI';
+import { assoc } from 'ramda'
 
 class Book extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      selectedVal: props.book.status || 'none'
-    }
+      selectedVal: props.book.shelf || 'none'
+    };
   }
 
   changeSelected = ({ target: { value: selectedVal } }) => {
+    // For better UX, update UI as soon as possible
+    const prevState = this.state.selectedVal;
+    this.setState({ selectedVal })
+    if ( this.props.update ) {
+      this.props.update(assoc('shelf', selectedVal, this.props.book))
+    }
     BooksAPI.update(this.props.book, selectedVal).then(b => {
-      console.log(b)
-      // this.setState({ selectedVal: })
-    })
+      // Politically correct
+      // this.setState({ selectedVal })
+      // if ( this.props.update ) {
+      //   this.props.update(assoc('shelf', selectedVal, this.props.book))
+      // }
+    }).catch(() => {
+      this.setState({ selectedVal: prevState })
+      if ( this.props.update ) {
+        this.props.update(assoc('shelf', prevState, this.props.book))
+      }
+    });
   }
 
   render() {
-    const { book } = this.props
-    const { title, author } = book
-    const status = this.state.selectedVal
-    const imageURL = book.imageURL || ( book.imageLinks && book.imageLinks.thumbnail )
+    const { book } = this.props;
+    const { title, author } = book;
+    const status = this.state.selectedVal;
+    const imageURL = book.imageURL || ( book.imageLinks && book.imageLinks.thumbnail );
 
     const styles = {
       width: 128,
       height: 193,
       backgroundImage: `url(${imageURL})`
-    }
+    };
 
     return (
       <div className="book">
@@ -45,9 +60,9 @@ class Book extends Component {
         <div className="book-title">{title}</div>
         <div className="book-authors">{author}</div>
       </div>
-    )
+    );
   }
 }
 
 
-export default Book
+export default Book;

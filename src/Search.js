@@ -1,27 +1,27 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import { toBookListItem } from './ListBooks'
-import * as BooksAPI from './BooksAPI'
-import debounce from 'debounce'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { toBookListItem } from './ListBooks';
+import * as BooksAPI from './BooksAPI';
+import debounce from 'debounce';
 
 class Search extends Component {
   state = {
     query: '',
     books: []
-  }
+  };
 
   delayedSearch = debounce(({ target: { value: query } }) => {
     if ( ! query ) return;
     BooksAPI.search(query).then(books => {
       if ( books && books.length )
         this.setState({ books })
-    })
-  }, 300)
+    });
+  }, 300);
 
   search = (e) => {
-    e.persist()
-    this.setState({ query: e.target.value })
-    this.delayedSearch(e)
+    e.persist();
+    this.setState({ query: e.target.value });
+    this.delayedSearch(e);
   }
 
   render() {
@@ -35,12 +35,12 @@ class Search extends Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {this.state.books.map(toBookListItem)}
+            {this.state.books.map(toBookListItem.bind(null, this.props.update))}
           </ol>
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default Search
+export default Search;

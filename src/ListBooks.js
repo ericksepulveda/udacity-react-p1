@@ -1,21 +1,21 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
-import Book from './Book'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import Book from './Book';
 
 const shelves = [
   { value: 'currentlyReading', display: 'Currently Reading' },
   { value: 'wantToRead',       display: 'Want to Read' },
   { value: 'read',             display: 'Read' }
-]
+];
 
 class ListBooks extends Component {
   static propTypes = {
     books: PropTypes.array
-  }
+  };
 
   render() {
-    const { books } = this.props
+    const { books, update } = this.props;
 
     return (
       <div className="list-books">
@@ -29,6 +29,7 @@ class ListBooks extends Component {
                 key={shelve.value}
                 books={books}
                 shelve={shelve}
+                updateFunction={update}
               />
             ))}
           </div>
@@ -37,12 +38,12 @@ class ListBooks extends Component {
           <Link to='/search'>Add a book</Link>
         </div>
       </div>
-    )
+    );
   }
 }
 
 function Shelve(props) {
-  const { shelve, books } = props
+  const { shelve, books, updateFunction } = props;
   return (
     <div key={shelve.value} className="bookshelf">
       <h2 className="bookshelf-title">{shelve.display}</h2>
@@ -51,25 +52,25 @@ function Shelve(props) {
           {
             books
               .filter(hasValue(shelve.value))
-              .map(toBookListItem)
+              .map(toBookListItem.bind(null, updateFunction))
           }
         </ol>
       </div>
     </div>
-  )
+  );
 }
 
 
 function hasValue(value) {
-  return (book) => book.status === value
+  return (book) => book.shelf === value;
 }
 
-export function toBookListItem(book) {
+export function toBookListItem(updateFunction, book) {
   return (
     <li key={book.id || book.title}>
-      <Book book={book}/>
+      <Book book={book} update={updateFunction}/>
     </li>
-  )
+  );
 }
 
-export default ListBooks
+export default ListBooks;
