@@ -4,10 +4,12 @@ import { toBookListItem } from './ListBooks';
 import * as BooksAPI from './BooksAPI';
 import PropTypes from 'prop-types';
 import debounce from 'debounce';
+import { append, find, propEq } from 'ramda';
 
 class Search extends Component {
   static propTypes = {
-    update: PropTypes.func
+    update: PropTypes.func,
+    books: PropTypes.array
   };
 
   state = {
@@ -18,8 +20,13 @@ class Search extends Component {
   delayedSearch = debounce(({ target: { value: query } }) => {
     if ( ! query ) return;
     BooksAPI.search(query).then(books => {
-      if ( books && books.length )
-        this.setState({ books })
+      if ( books && books.length ) {
+        const mergedBooks = books.reduce((r, b) => {
+          return append(find(propEq('id', b.id), this.props.books) || b, r)
+        }, [])
+
+        this.setState({ books: mergedBooks })
+      }
     });
   }, 300);
 
